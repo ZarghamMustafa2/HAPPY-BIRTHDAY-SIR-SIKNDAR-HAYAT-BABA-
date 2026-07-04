@@ -312,26 +312,22 @@ section {
   position: absolute;
   inset: -1px;
   border-radius: 37px;
-  background: conic-gradient(from var(--a), transparent, var(--purple), var(--pink), var(--cyan), transparent);
+  background: conic-gradient(from 0deg, transparent, var(--purple), var(--pink), var(--cyan), transparent);
   z-index: -1;
-  animation: spin 4s linear infinite;
+  animation: spin 6s linear infinite;
   opacity: .35;
   mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
   -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   padding: 1px;
-}
-
-@property --a {
-  syntax: '<angle>';
-  inherits: false;
-  initial-value: 0deg;
+  transform: rotate(0deg);
+  transform-origin: center;
 }
 
 @keyframes spin {
   to {
-    --a: 360deg;
+    transform: rotate(360deg);
   }
 }
 
@@ -1299,6 +1295,8 @@ footer .hrt {
   .g-card {
     border-radius: 28px;
     padding: 18px;
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
   }
   .g-card::before {
     border-radius: 29px;

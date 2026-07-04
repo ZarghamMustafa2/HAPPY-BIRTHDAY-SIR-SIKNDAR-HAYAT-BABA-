@@ -32,18 +32,21 @@ function initStarfield() {
     targetMy = (e.clientY / h - 0.5) * 50;
   });
 
-  // Populate stars
+  // Populate stars with precalculated style strings
   for (let i = 0; i < starCount; i++) {
+    const size = Math.random() * 1.5 + 0.5;
+    const opacity = Math.random() * 0.55 + 0.15;
+    const colorRGB = Math.random() > 0.45 
+      ? '255,255,255' 
+      : (Math.random() > 0.5 ? '124,58,237' : '255,45,120');
+
     stars.push({
       x: Math.random() * w,
       y: Math.random() * h,
-      size: Math.random() * 1.6 + 0.4,
-      opacity: Math.random() * 0.55 + 0.15,
+      size: size,
       dx: (Math.random() - 0.5) * 0.04,
       dy: (Math.random() - 0.5) * 0.04,
-      color: Math.random() > 0.45 
-        ? '#ffffff' 
-        : (Math.random() > 0.5 ? '#7c3aed' : '#ff2d78')
+      style: `rgba(${colorRGB},${opacity})`
     });
   }
 
@@ -53,6 +56,8 @@ function initStarfield() {
     // Smooth interpolation of mouse offset
     mx += (targetMx - mx) * 0.06;
     my += (targetMy - my) * 0.06;
+
+    const groups = {};
 
     stars.forEach((s) => {
       s.x += s.dx;
@@ -68,15 +73,18 @@ function initStarfield() {
       const posX = s.x - mx * (s.size * 0.6);
       const posY = s.y - my * (s.size * 0.6);
 
-      ctx.beginPath();
-      ctx.arc(posX, posY, s.size, 0, Math.PI * 2);
-      ctx.fillStyle = s.color;
-      ctx.globalAlpha = s.opacity;
-      ctx.fill();
+      if (!groups[s.style]) groups[s.style] = [];
+      groups[s.style].push({ x: posX, y: posY, r: s.size });
     });
 
-    // Reset alpha for safety
-    ctx.globalAlpha = 1.0;
+    // Draw all stars grouped by their exact rgba style
+    for (const style in groups) {
+      ctx.fillStyle = style;
+      groups[style].forEach((p) => {
+        // Fast rectangular drawing (much faster than arc curves)
+        ctx.fillRect(p.x - p.r, p.y - p.r, p.r * 2, p.r * 2);
+      });
+    }
 
     requestAnimationFrame(animate);
   }
