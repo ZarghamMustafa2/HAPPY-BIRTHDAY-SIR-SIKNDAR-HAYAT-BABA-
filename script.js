@@ -614,3 +614,20 @@ setTimeout(() => fireConfetti(10), 1000);
 
 console.log('%c🎂 Happy Birthday SIR SIKANDAR HAYAT BABA! 🎉', 'font-size:22px;font-weight:bold;color:#ff2d78');
 console.log('%cRahnuma-e-Safar | Crafted with ❤️', 'font-size:14px;color:#7c3aed');
+
+// ─── DISABLE ZOOM IN / ZOOM OUT ON MOBILE (TOUCH SAFEGUARD) ───
+document.addEventListener('touchstart', (e) => {
+  if (e.touches.length > 1) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+let lastTouchEnd = 0;
+document.addEventListener('touchend', (e) => {
+  const now = (new Date()).getTime();
+  if (now - lastTouchEnd <= 300) {
+    e.preventDefault();
+  }
+  lastTouchEnd = now;
+}, false);
+
